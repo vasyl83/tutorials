@@ -3,7 +3,7 @@ title: Joining Active Directory
 taxonomy:
     category: docs
 ---
-In this example, Active Directory domain is ad.gontar.net and the domain controller is pdc.ad.gontar.net, Linux box hostname is debian. sssd and realmd will be used to join AD.
+In this example, Active Directory domain is gontar.ca and the domain controller is dc-srv.gontar.ca, Linux box hostname is debian. sssd and realmd will be used to join AD.
 
 Make sure the linux box uses AD DNS:
 
