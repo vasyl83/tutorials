@@ -7,9 +7,9 @@ process:
 ---
 
 #####Static IP
-```
-# nano /etc/network/interfaces
 
+Simply edit `/etc/network/interfaces` to look like this:
+```
 # This file describes the network interfaces available on your system
 # and how to activate them. For more information, see interfaces(5).
     
@@ -67,9 +67,9 @@ iface br0 inet6 static
 #####Nano highlighting
 Create needed files and folders (must be done for each user, or):
 ```
-debian :: ~ » mkdir -p ~/.nano/syntax
-debian :: ~ » touch ~/.nano/syntax/syntax.nanorc
-debian :: ~ » touch ~/.nanorc
+mkdir -p ~/.nano/syntax
+touch ~/.nano/syntax/syntax.nanorc
+touch ~/.nanorc
 ```
 Paste the following in `~/.nano/syntax/syntax.nanorc`:
 ```
