@@ -8,18 +8,20 @@ In this example, Active Directory domain is gontar.ca and the domain controller 
 Make sure the linux box uses AD DNS:
 
 ```
-debian :: ~ » dig -t SRV _ldap._tcp.gontar.ca | grep -A2 "ANSWER SECTION"
+# dig -t SRV _ldap._tcp.gontar.ca | grep -A2 "ANSWER SECTION"
 
 ;; ANSWER SECTION:
-_ldap._tcp.gontar.ca. 600   IN      SRV     0 100 389 dc-srv.gontar.ca.
+_ldap._tcp.gontar.ca.	600	IN	SRV	0 100 389 dc-srv.gontar.ca.
 ```
+
+If the answer isn't right check `/etc/resolv.conf` and your connection settings (usually `/etc/network/interfaces`).
 
 Install sssd and realmd:
 ```
-debian :: ~ » apt-get -y install realmd sssd sssd-tools samba-common krb5-user packagekit samba-common-bin samba-libs adcli ntp libpam-sss libnss-sss
+# sudo apt-get -y install realmd sssd sssd-tools samba-common krb5-user packagekit samba-common-bin samba-libs adcli ntp libpam-sss libnss-sss
 ```
 
-When prompted, type in your AD Kerberos realm. It should generally be your domain name in capital letters (“ad.gontar.net” becomes “AD.GONTAR.NET”). If your DNS is working properly, that should be all that is needed for the Kerberos client to work. If no promt appears during install, simply invoke dpkg: `$ sudo dpkg-reconfigure krb5-config`
+When prompted, type in your AD Kerberos realm. It should be your domain name in capital letters (“gontar.ca” becomes “GONTAR.CA”). If your DNS is working properly, that should be all that is needed for the Kerberos client to work. If no promt appears during install, simply invoke dpkg: `$ sudo dpkg-reconfigure krb5-config`
 
 Otherwise you may need to add your servers to **/etc/krb5.conf** here is what it should look like:
 
@@ -64,7 +66,7 @@ Otherwise you may need to add your servers to **/etc/krb5.conf** here is what it
         krb4_convert = true
         krb4_get_tickets = false
 ```
-In an Active Directory environment time sync with domain controller is important. The domain controllers in AD behave as ntp servers. Edit the **/etc/ntp.conf** file. Comment out the preset timeservers and add your Domain Controller instead:
+In an Active Directory environment time sync with domain controller is important. The domain controllers in AD behave as ntp servers. Edit the **/etc/ntp.conf** file. Comment out any timeservers and add your Domain Controller instead:
 ```
 ...
 # You do need to talk to an NTP server or two (or three).
@@ -80,15 +82,14 @@ server dc-srv.gontar.ca
 #server 3.debian.pool.ntp.org iburst
 ...
 ```
-Once this is done, restart ntp service `debian :: ~ » service ntp restart`.
+Once this is done, restart ntp service with `service ntp restart`.
 
 Try getting a Kerberos ticket as domain administrator:
 ```
-debian :: ~ » kinit administrator@GONTAR.CA
+# kinit administrator@GONTAR.CA
 Password for administrator@GONTAR.CA:
 ```
-
-If the command was successful, you will not see any output. Verify that the ticket was obtaineds with `$ klist`, the output should look something like this:
+If the command was successful, you will not see any output. Verify that the ticket was obtained with `klist`, the output should look something like this:
 ```
 debian :: ~ » klist
 Ticket cache: FILE:/tmp/krb5cc_0
@@ -99,9 +100,9 @@ Valid starting       Expires              Service principal
         renew until 04/11/2016 00:49:18
 ```
 
-That shows Kerberos authentication is working fine with the domain controller. 
+That line shows Kerberos authentication is working fine with the domain controller. 
 
-Next create a new **/etc/realmd.conf** to configure realmd realm enrollment tool which will be used to join the domain, with the following settings:
+Next create **/etc/realmd.conf** to configure realmd with the following settings:
 ```
 [users]
 default-home = /home/%D/%U
@@ -109,7 +110,7 @@ default-shell = /bin/bash
 [active-directory]
 default-client = sssd
 os-name = Debian Jessie
-os-version = 8.4
+os-version = 8
 [service]
 automatic-install = no
 [gontar.ca]
@@ -133,7 +134,7 @@ manage-system = no
 
 Let's see if realmd can discover the domain:
 ```
-debian :: ~ » realm discover GONTAR.CA
+# realm discover GONTAR.CA
 gontar.ca
   type: kerberos
   realm-name: GONTAR.CA
@@ -148,11 +149,11 @@ gontar.ca
   required-package: adcli
   required-package: samba-common-bin
 ```
-Time to join the domain, issue the following command `realm --verbose join gontar.ca --user-principal=file-srv/administrator@GONTAR.CA --unattended`
+Time to join the domain, issue the following command `realm --verbose join gontar.ca --user-principal=file-srv/administrator@GONTAR.CA`
 
-To check that everything went ok do `realm list`:
+To check that everything went ok invoke `realm list`:
 ```
-debian :: ~ » realm list
+# realm list
 gontar.ca
   type: kerberos
   realm-name: GONTAR.CA
@@ -169,7 +170,7 @@ gontar.ca
   login-formats: %U
   login-policy: allow-realm-logins
 ```
-When using realmd to join the machine in the domain, it creates the configuration for sssd in the **/etc/sssd/sssd.conf** file. Unfortunately realmd does not get everything right.
+When using realmd to join the machine in the domain, it creates the configuration for sssd in the **/etc/sssd/sssd.conf** file. Unfortunately realmd does not get everything right sometimes.
 
 Modify the `access_provider = simple` option in the **/etc/sssd/sssd.conf** file, to read `access_provider = ad` and append `sudo_provider = none` at the end of the file. sudo_provider helps to avoid errors when using sudo as a domain user (you can still give sudo to domain users through visudo).
 
@@ -177,23 +178,23 @@ Restart sssd `service sssd restart`.
 
 Check that everything is working with `id` and `getent`:
 ```
-debian :: ~ » id administrator
+# id administrator
 uid=1068800500(administrator) gid=1068800513(domain users) groups=1068800513(domain users),1068800520(group policy creator owners),1068800519(enterprise admins),1068800512(domain admins),1068800518(schema admins),1068801128(users),1068800572(denied rodc password replication group)
-debian :: ~ » getent group "domain users"
+
+# getent group "domain users"
 domain users:*:1068800513:vasyl,administrator,veronika,vitaliy,krbtgt,maryna,julie
 ```
-If either one of the commands does not return valid entries append `enumerate = True` at the end of **/etc/sssd/sssd.conf**, restart sssd and try again. If it is still not working check the logs under **/var/log/sssd/**, **/var/log/auth** and **/var/log/syslog**. Also never forget that [Google](https://google.com) is your friend!
+If either one of the commands does not return valid entries append `enumerate = True` at the end of **/etc/sssd/sssd.conf**, restart sssd and try again. If it is still not working check the logs under **/var/log/sssd/**, **/var/log/auth** and **/var/log/syslog**. Also never forget that [Google](https://google.com) is your friend! Try googling any errors that you get.
 
-Finally add the pam_mkhomedir module, as the last module in the **/etc/pam.d/common-session** file in order to set up home directory autocreation for all users upon first login:
+Finally add the pam_mkhomedir, at the last line in **/etc/pam.d/common-session** in order to set up home directory autocreation for all users upon first login:
 ```
-debian :: ~ » echo "session required pam_mkhomedir.so skel=/etc/skel/ umask=0077" >> /etc/pam.d/common-session
+# echo "session required pam_mkhomedir.so skel=/etc/skel/ umask=0077" >> /etc/pam.d/common-session
 ```
-
-It is possible to also authenticate logins to Desktop using Active Directory accounts. The AD accounts will not show up in the pick list with local users, so lightdm will need to be modified. Edit the file `/etc/lightdm/lightdm.conf.d/50-unity-greeter.conf` and append the following two lines:
+It is possible to also authenticate desktop logins using Active Directory accounts. The AD accounts will not show up in the pick list with local users, so lightdm will need to be modified. Edit the file `/etc/lightdm/lightdm.conf.d/50-unity-greeter.conf` and append the following two lines (if the file doesn't exist create it and the lightdm.conf.d folder):
 ```
 greeter-show-manual-login=true
 greeter-hide-users=true
 ```
 Afterward lightdm need to be restarted (by rebooting the computer).
 
-If GSSAPI will be used to authenticate windows clients connecting to Debian (passwordless connection without need to set up keys) it is also required to enable delegation in Active Directory Users and Computers for the newly created principal (Trust this computer for delegation to any service (Kerberos only).
+If GSSAPI will be used to authenticate windows clients connecting to Debian (passwordless connection without need to set up keys) it is also required to enable delegation in Active Directory, Users and Computers for the newly created principal (Trust this computer for delegation to any service (Kerberos only).
