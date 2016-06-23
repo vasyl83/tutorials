@@ -8,7 +8,7 @@ process:
 
 #####Static IP
 ```
-debian :: ~ » nano /etc/network/interfaces
+# nano /etc/network/interfaces
 
 # This file describes the network interfaces available on your system
 # and how to activate them. For more information, see interfaces(5).
@@ -22,18 +22,48 @@ iface lo inet loopback
 # The primary network interface
 auto eth0
 iface eth0 inet static
-address 192.168.0.3
-netmask 255.255.255.0
-gateway 192.168.0.1
-network 192.168.0.0
-broadcast 192.168.0.255
-dns-nameservers 192.168.0.2
-dns-search ad.gontar.net
+		address 192.168.0.5
+		netmask 255.255.255.0
+		gateway 192.168.0.1
+		network 192.168.0.0
+		broadcast 192.168.0.255
+		dns-nameservers 192.168.0.2
+		dns-search gontar.ca
 iface eth0 inet6 static
-address 2001:470:1d:1fe::3
-netmask 64
-gateway 2001:470:1d:1fe::1
+		address 2001:470:1d:1fe::5
+		netmask 64
+		gateway 2001:470:1d:1fe::1
 ```
+I case a bridge is needed to run KVM use the following:
+```
+auto br0
+iface br0 inet static
+        address 192.168.0.5
+        netmask 255.255.255.0
+        gateway 192.168.0.1
+        network 192.168.0.0
+        broadcast 192.168.0.255
+
+        dns-nameservers 192.168.0.2
+        dns-search gontar.ca
+
+        bridge_ports eth0
+        bridge_stp off
+        bridge_fd 0
+        bridge_maxwait 0
+
+iface br0 inet6 static
+        address 2001:470:1d:1fe::5
+        gateway 2001:470:1d:1fe::1
+        netmask 64
+
+        bridge_ports eth0
+        bridge_stp off
+        bridge_fd 0
+        bridge_maxwait 0
+
+```
+
 #####Nano highlighting
 Create needed files and folders (must be done for each user, or):
 ```
@@ -62,7 +92,7 @@ color red "(^|\s|[[/:|<>(){}=,]|\])[-+]?[0-9](\.?[0-9])*%?($|\>)"
 # keys
 icolor cyan "^\s*(\$if )?([A-Z0-9_\/\.\%\@+-]|\s)+="
 # punctuation
-color blue "/"
+color brightwhite "/"
 color brightwhite "(\]|[()<>[{},;:=])"
 color brightwhite "(^|\[|\{|\:)\s*-(\s|$)"
 # section headings
