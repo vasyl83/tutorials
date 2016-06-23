@@ -13,7 +13,7 @@ Create a new user for Docker (it is not strictly necessary, but it is cleaner th
 
 If it is the first system user created on Debian it should have UID 108 and GID 113. Check UID and GID with:
 ```
-debian :: ~ » id docker
+» id docker
 uid=108(docker) gid=113(docker) groups=113(docker)
 ```
 Now all is left is to start the containers with the apps we want. The individual apps will be covered in [HTPC Software](../htpc), [Remote backup](../backup/remote) and in [Chapter 4](../../../webserver).
