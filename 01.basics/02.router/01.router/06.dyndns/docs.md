@@ -49,7 +49,7 @@ Here is the script as is for gontar.net
         :set previousIP $currentIP
 		
 		# The update URL. Note the "\3F" is hex for question mark (?). Required since ? is a special character in commands.
-		:local url "https://ipv4.dyn.dns.he.net/nic/update\3Fmyip=$currentIP"
+		:local url "https://dyn.dns.he.net/nic/update\3Fmyip=$currentIP"
 		:local dnshostarray;
 		:set dnshostarray [:toarray $DNShosts];
 		
@@ -117,7 +117,7 @@ add name=he.net-update owner=admin policy=ftp,reboot,read,write,policy,test,pass
     \n        :set previousIP \$currentIP\r\
     \n\t\t\r\
     \n\t\t# The update URL. Note the \"\\3F\" is hex for question mark (\?). Required since \? is a special character in commands.\r\
-    \n\t\t:local url \"https://ipv4.dyn.dns.he.net/nic/update\\3Fmyip=\$currentIP\"\r\
+    \n\t\t:local url \"https://dyn.dns.he.net/nic/update\\3Fmyip=\$currentIP\"\r\
     \n\t\t:local dnshostarray;\r\
     \n\t\t:set dnshostarray [:toarray \$DNShosts];\r\
     \n\t\t\r\
