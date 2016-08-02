@@ -4,7 +4,7 @@ taxonomy:
     category: docs
 ---
 
-To proxy Exchange with all it functions nginx needs ngx_headers_more module, Debian has that module in nginx-full package.
+To proxy Exchange with all it functions nginx needs `ngx_headers_more` module, Debian has that module in nginx-full or nginx-extra packages.
 
 The setup is pretty straight forward, in this example `https://postmaster.ad.gontar.net` should point to the internal URL of the Exchange service you are trying to make available from the outside. `more_set_headers -s 401 ‘WWW-Authenticate: Basic realm=”gontar.net”‘` should point to either you external or internal address to access Exchange. In my case postmaster.ad.gontar.net is my internal exchange address and gontar.net is external. Paste the following inside `server` block:
 
@@ -114,7 +114,7 @@ location /ews {
         proxy_pass https://postmaster.ad.gontar.net/ews;
 }
 ```
-Autodiscover can use either autodiscover.gontar.net or gontar.net/autodiscover, both will work as any client trying to connect to your Exchange server will try one then the other. For completion sake, enable both by creating an additionnal `server` block for autodiscover subdomain:
+Autodiscover can use either autodiscover.gontar.net or gontar.net/autodiscover, both will work as any client trying to connect to your Exchange server will try one then the other. For completion sake, enable both by creating an additionnal `server` block for autodiscover subdomain (or if you are using a Let's Encrypt certificate, juste request autodiscover subdomain to be added to your certificate and add autodiscover to server name string):
 
 ```
 server {
