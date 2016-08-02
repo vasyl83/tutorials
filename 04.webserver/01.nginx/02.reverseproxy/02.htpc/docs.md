@@ -30,6 +30,8 @@ location /guac/ {
         proxy_set_header Connection $http_connection;
         proxy_buffering off;
         proxy_http_version 1.1;
-#       proxy_cookie_path /guacamole/ /guac/;
+        proxy_cookie_path /guacamole/ /guac/;
         }
 ```
+
+The `proxy_cookie_path /guacamole/ /guac/;` is only needed if your subfolder is different from the default one, if you omit it, it will still work but may take longer to load the page.
