@@ -43,5 +43,4 @@ Here is the global list:
 |[linuxserver/pydio](https://hub.docker.com/r/linuxserver/pydio/)|Pydio is a mature open source software solution for file sharing and synchronization|
 |[linuxserver/openvpn-as](https://hub.docker.com/r/linuxserver/openvpn-as/)|OpenVPN Access Server is a full featured secure network tunneling VPN software solution|
 |[linuxserver/codiad](https://hub.docker.com/r/linuxserver/codiad/)|Codiad is a web-based IDE framework|
-|[hurricane/ubooquity](https://hub.docker.com/r/hurricane/ubooquity/)|Ubooquity is a free, lightweight and easy-to-use home server for your comics
-and ebooks|
+|[hurricane/ubooquity](https://hub.docker.com/r/hurricane/ubooquity/)|Ubooquity is a free, lightweight and easy-to-use home server for your comics and ebooks|
