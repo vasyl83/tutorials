@@ -26,6 +26,7 @@ Here is the global list:
 |[linuxserver/plex](https://hub.docker.com/r/linuxserver/plex/)|Plex media server|
 |[linuxserver/couchpotato](https://hub.docker.com/r/linuxserver/couchpotato/)|Automatic video library manager for movies|
 |[linuxserver/sickrage](https://hub.docker.com/r/linuxserver/sickrage/)|Automatic video library manager for tv shows|
+|[linuxserver/sonarr](https://hub.docker.com/r/linuxserver/sonarr/)|Sonarr (formerly NZBdrone) is a more modern looking alternative to SickRage, il still lacks some of Sickrage features but its modern UI more than makes up for it|
 |[linuxserver/plexpy](https://hub.docker.com/r/linuxserver/plexpy/)|Plex usage tracker|
 |[lsiodev/plexrequests](https://hub.docker.com/r/lsiodev/plexrequests/)|Automated way for users to request new content for Plex, works with SickRage and Couchpotato|
 |[linuxserver/mariadb](https://hub.docker.com/r/linuxserver/mariadb/)|MariaDB database|
@@ -37,3 +38,10 @@ Here is the global list:
 |[linuxserver/gsm-ts3](https://hub.docker.com/r/linuxserver/gsm-ts3/)|Teamspeak server|
 |[jrcs/crashplan](https://hub.docker.com/r/jrcs/crashplan/)|Crashplan backup|
 |[zuhkov/observium](https://hub.docker.com/r/zuhkov/observium/)|Observium snmp monitoring suite|
+|[linuxserver/jackett](https://hub.docker.com/r/linuxserver/jackett/)|Jackett works as a proxy server: it translates queries from apps (Sonarr, SickRage, CouchPotato, Mylar, etc) into tracker-site-specific http queries|
+|[linuxserver/syncthing](https://hub.docker.com/r/linuxserver/syncthing/)|An open source sync agent|
+|[linuxserver/pydio](https://hub.docker.com/r/linuxserver/pydio/)|Pydio is a mature open source software solution for file sharing and synchronization|
+|[linuxserver/openvpn-as](https://hub.docker.com/r/linuxserver/openvpn-as/)|OpenVPN Access Server is a full featured secure network tunneling VPN software solution|
+|[linuxserver/codiad](https://hub.docker.com/r/linuxserver/codiad/)|Codiad is a web-based IDE framework|
+|[hurricane/ubooquity](https://hub.docker.com/r/hurricane/ubooquity/)|Ubooquity is a free, lightweight and easy-to-use home server for your comics
+and ebooks|
