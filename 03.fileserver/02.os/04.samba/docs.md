@@ -47,9 +47,8 @@ printcap name = /dev/null
         admin users = @"domain admins"
         hide files = /lost+found/
         hide unreadable = yes
-        hide unwriteable files = yes
+        #hide unwriteable files = yes
         access based share enum = yes
-
 ```
 Request a new Kerberos ticket for Administrator if the one from [AD section](../sso) isn't valid anymore by issuing `kinit administrator` and then instruct samba to join AD with `net ads join -k` (may not be required but I still do it just in case).
 
