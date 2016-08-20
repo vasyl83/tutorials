@@ -28,10 +28,12 @@ os level = 0
 
 kerberos method = secrets and keytab
 
-load printers = no
-disable spoolss = yes
-printing = bsd
-printcap name = /dev/null
+load printers = yes
+#disable spoolss = yes
+printing = cups
+printcap name = cups
+
+admin users = root @"domain admins"
 
 [example]
         comment = example share
@@ -49,6 +51,24 @@ printcap name = /dev/null
         hide unreadable = yes
         #hide unwriteable files = yes
         access based share enum = yes
+
+[printers]
+        comment=All Printers
+        path=/var/spool/samba
+        browseable=yes
+        guest ok=no
+        writable=no
+        printable=yes
+        create mode=0700
+        write list=vasyl @"domain users"
+
+[print$]
+        path = /opt/samba/printer_drivers
+        comment = Printer drivers
+        write list=vasyl @"domain users"
+        browseable = yes
+        writeable = yes
+
 ```
 Request a new Kerberos ticket for Administrator if the one from [AD section](../sso) isn't valid anymore by issuing `kinit administrator` and then instruct samba to join AD with `net ads join -k` (may not be required but I still do it just in case).
 
