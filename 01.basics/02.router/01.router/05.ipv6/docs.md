@@ -3,7 +3,7 @@ title: IPv6 and Tunnel Broker
 taxonomy:
     category: docs
 ---
-Bell in their infinite wisdom, still haven't deployed IPv6 to their customer base. To remedy this, let's setup a 6in4 tunnel so that our network can access IPv6 internet without anyhelp from Bell.
+Bell in their infinite wisdom, still haven't deployed IPv6 to their customer base. To remedy this, let's setup a 6in4 tunnel so that our network can access IPv6 internet without any help from Bell.
 
 First, we need to register a free 6in4 tunnel with [Hurricane Electric](https://tunnelbroker.net/). Once that is done, the setup is quite easy. Simply go to Example Configurations in their interface and select Mikrotik. Execute the 3 commands and the tunnel is setup. All that is left to do is to instruct our network on how to use IPv6.
 
@@ -32,7 +32,7 @@ set [ find default=yes ] advertise-dns=yes interface=bridge-local managed-addres
 /ipv6 nd prefix default
 set autonomous=yes
 ```
-Now that IPv6 is enabled and all the clients have access to internet through IPv6, the firewall must be setup and enabled. Here is a basic firewall config:
+Now that IPv6 is enabled and all the clients have access to internet through IPv6, the firewall must be set up and enabled. Here is a basic firewall config:
 ```
 /ipv6 firewall filter
 add chain=input comment="Allow ICMPv6" protocol=icmpv6

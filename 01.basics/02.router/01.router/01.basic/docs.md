@@ -90,7 +90,7 @@ Set router name
 /system identity
 set name=router
 ```
-Setup NTP (adjust timezone and ntp servers that correcpond to your location)
+Setup NTP (adjust timezone and ntp servers that correspond to your location)
 ```
 /system clock
 set time-zone-name=America/Toronto

@@ -3,14 +3,14 @@ title: Wifi and guest wifi
 taxonomy:
     category: docs
 ---
-Firstly, securing and customizing the main wifi. Change the name and channels to your preference.
+Firstly, secure and customize the main wifi. Change the name and channels to your preference.
 ```
 /interface wireless
 set [ find default-name=wlan1 ] band=2ghz-b/g/n channel-width=20/40mhz-eC \
     disabled=no frequency=2462 mode=ap-bridge ssid="Obi WLAN Kenobi" \
     wireless-protocol=802.11
 ```
-For basic security let's enable wpa2. Don't forget to change your password (pre-shared-key)
+For basic security let's enable WPA2. Don't forget to change your password (pre-shared-key)
 ```
 /interface wireless security-profiles
 set [ find default=yes ] authentication-types=wpa2-psk eap-methods="" mode=\
@@ -46,12 +46,12 @@ add address-pool=ap-guest-pool disabled=no interface=ap-guest name=ap-guest-dhcp
 /ip dhcp-server network
 add address=192.168.10.0/24 dns-server=8.8.8.8,8.8.4.4 gateway=192.168.10.1
 ```
-In odrer to communicate with the outside additionnal NAT must be created
+In odrer to communicate with the outside additionnal NAT rule must be created
 ```
 /ip firewall nat
 add action=masquerade chain=srcnat comment="Allow NAT on guest wifi" out-interface=pppoe-bell src-address=192.168.10.0/2
 ```
-Drop any communication between our main and guest network
+Drop any communication between main and guest network
 ```
 /ip firewall filter
 add action=drop chain=input comment="Drop all connections to/from guest wifi" dst-address=192.168.10.0/24 src-address=192.168.0.0/24

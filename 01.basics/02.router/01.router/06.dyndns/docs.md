@@ -3,7 +3,7 @@ title: Dynamic DNS
 taxonomy:
     category: docs
 ---
-This section is useless for anyone with a static ip, but since residential Bell Fibe service does not include a static ip here is an easy way to freely configure a dynamic dns. RouetrOS has this feature built in.
+This section is useless for anyone with a static ip, but since residential Bell Fibe service does not include a static ip here is an easy way to configure a dynamic dns for free. RouetrOS has this feature built in.
 ```
 /ip cloud
 set ddns-enabled=yes
