@@ -190,11 +190,11 @@ Finally add the pam_mkhomedir, at the last line in **/etc/pam.d/common-session**
 ```
 # echo "session required pam_mkhomedir.so skel=/etc/skel/ umask=0077" >> /etc/pam.d/common-session
 ```
-It is possible to also authenticate desktop logins using Active Directory accounts. The AD accounts will not show up in the pick list with local users, so lightdm will need to be modified. Edit the file `/etc/lightdm/lightdm.conf.d/50-unity-greeter.conf` and append the following two lines (if the file doesn't exist create it and the lightdm.conf.d folder):
+It is possible to also authenticate desktop logins using Active Directory accounts. The AD accounts will not show up in the list with local users, so lightdm will need to be modified. Edit the file `/etc/lightdm/lightdm.conf.d/50-unity-greeter.conf` and append the following two lines (if the file doesn't exist create it and the lightdm.conf.d folder):
 ```
 greeter-show-manual-login=true
 greeter-hide-users=true
 ```
-Afterward lightdm need to be restarted (by rebooting the computer).
+Afterwards, lightdm needs to be restarted (by rebooting the computer).
 
-If GSSAPI will be used to authenticate windows clients connecting to Debian (passwordless connection without need to set up keys) it is also required to enable delegation in Active Directory, Users and Computers for the newly created principal (Trust this computer for delegation to any service (Kerberos only).
+If GSSAPI is used to authenticate windows clients connecting to Debian (passwordless connection without need to set up keys) it is also required to enable delegation in Active Directory, Users and Computers for the newly created principal (Trust this computer for delegation to any service (Kerberos only).

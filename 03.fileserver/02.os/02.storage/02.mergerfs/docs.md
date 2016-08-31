@@ -15,7 +15,7 @@ Reading state information... Done
 fuse is already the newest version.
 0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
 ```
-Next visit [MergerFS releases page](https://github.com/trapexit/mergerfs/releases) and download the latest version for desired architecture, at the moment of writing for Debian it is [mergerfs_2.12.3.debian-jessie_amd64.deb](https://github.com/trapexit/mergerfs/releases/download/2.12.3/mergerfs_2.12.3.debian-jessie_amd64.deb).
+Next visit [MergerFS releases page](https://github.com/trapexit/mergerfs/releases) and download the latest version for desired architecture, at the moment of writing for Debian it is [mergerfs_2.15.0.debian-jessie_amd64.deb](https://github.com/trapexit/mergerfs/releases/download/2.15.0/mergerfs_2.15.0.debian-jessie_amd64.deb).
 
 The install is as easy as invoking wget to download and dpkg to install.
 ```

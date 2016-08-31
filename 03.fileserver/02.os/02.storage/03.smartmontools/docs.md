@@ -297,6 +297,6 @@ debian :: ~ » echo "DEVICESCAN -S on -o on -a -n standby,q -I 194 -W 4,35,40 -d
 
 This line enables monitoring on all the detected SAT hard drives and sets some sane options for self tests and reporting. For more infor refer to [smartd man page](https://www.smartmontools.org/browser/trunk/smartmontools/smartd.8.in).
 
-Firanlly restart smartd with `systemctl restart smartd.service`
+Finally restart smartd with `systemctl restart smartd.service`
 
-For more severly paranoid people you can also follow [this article](http://zackreed.me/articles/46-monitor-hard-disks-temperature-in-ubuntu-debian) to closer monitor HDD temperatures.
+For severely paranoid people you can also follow [this article](http://zackreed.me/articles/46-monitor-hard-disks-temperature-in-ubuntu-debian) to closer monitor HDD temperatures.

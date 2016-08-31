@@ -10,8 +10,8 @@ This part is mostly about my NAS, its current hardware and anything related to i
 
 |Part|Model|
 |----|-----|
-|CPU|[Intel Core i3-2100](http://ark.intel.com/products/53422/Intel-Core-i3-2100-Processor-3M-Cache-3_10-GHz)|
-|RAM|[3 x 4GB Kingston ValueRAM 1333 MHz](http://www.kingston.com/dataSheets/KVR13N9S8_4.pdf)|
+|CPU|[Intel Core i7-2600](http://ark.intel.com/products/52213/Intel-Core-i7-2600-Processor-8M-Cache-up-to-3_80-GHz)|
+|RAM|[6 x 8GB ADATA RAM 1600 MHz](http://www.ncix.com/detail/adata-xpg-v1-0-16gb-ddr3-1600-aa-93608.htm)|
 |Motherboard|[Asus P8Z68-V LX](https://www.asus.com/Motherboards/P8Z68V_LX/)|
 |RAID Controller|[LSI MegaRAID SAS 9240-8i](http://www.avagotech.com/products/server-storage/raid-controllers/megaraid-sas-9240-8i)|
 |Storage|[Samsung SSD 840 EVO 120 GB](http://www.samsung.com/global/business/semiconductor/minisite/SSD/global/html/ssd840evo/overview.html)|

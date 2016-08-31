@@ -34,7 +34,7 @@ iface eth0 inet6 static
 		netmask 64
 		gateway 2001:470:1d:1fe::1
 ```
-I case a bridge is needed to run KVM use the following:
+In case a bridge is needed to run KVM use the following:
 ```
 auto br0
 iface br0 inet static
