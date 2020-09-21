@@ -1,0 +1,353 @@
+version: "2.4"
+
+services:
+
+  mariadb:
+    image: linuxserver/mariadb
+    container_name: mariadb
+    environment:
+      - PUID=11103
+      - PGID=10513
+      - TZ=America/Toronto
+      - MYSQL_ROOT_PASSWORD=As3q6CGhpd
+    volumes:
+      - /opt/docker/mariadb:/config
+    ports:
+      - 3306:3306
+    restart: unless-stopped
+
+  swag:
+    image: linuxserver/swag
+    container_name: swag
+    cap_add:
+      - NET_ADMIN
+    environment:
+      - PUID=11103
+      - PGID=10513
+      - TZ=America/Toronto
+      - URL=gontar.net
+      - MAXMINDDB_LICENSE_KEY=vQo8asZ216sVXfpq
+      - SUBDOMAINS=wildcard
+      - VALIDATION=dns
+      - DNSPLUGIN=route53
+      - EMAIL=vasyl.gontar@gmail.com
+      - DHLEVEL=4096
+      - EXTRA_DOMAINS="gontar.ca,juliecharbonneau.ca,*.gontar.ca,*.juliecharbonneau.ca"
+    volumes:
+      - /opt/docker/letsencrypt:/config
+      - /mnt/pool/software/applications/isos:/assets
+    ports:
+      - 443:443
+      - 80:80
+    depends_on:
+      - "mariadb"
+    restart: unless-stopped
+  
+  plex:
+    image: linuxserver/plex
+    container_name: plex
+    network_mode: host
+    runtime: nvidia
+    environment:
+      - HOSTNAME=plex
+      - ADVERTISE_IP="https://intranet.gontar.ca"
+      - PUID=11103
+      - PGID=10513
+      - TZ=America/Toronto
+      - ALLOWED_NETWORKS="192.168.0.0/24,172.16.0.0/16"
+      - PLEX_CLAIM="claim-TMU1SiW8cRmaYn_K6k2h"
+      - VERSION=latest
+      - NVIDIA_VISIBLE_DEVICES=all
+    volumes:
+      - /opt/docker/letsencrypt/etc/letsencrypt:/le-ssl
+      - /opt/plex:/config
+      - /mnt/pool:/data
+      - /mnt/zpool:/zdata
+      - /tmp:/transcode
+    restart: unless-stopped
+
+  tautulli:
+    image: linuxserver/tautulli
+    container_name: tautulli
+    environment:
+      - PUID=11103
+      - PGID=10513
+      - TZ=America/Toronto
+    volumes:
+      - /opt/docker/tautulli:/config
+      - /opt/docker/lso/logs:/logs
+    ports:
+      - 9003:8181
+    depends_on:
+      - "plex"
+    restart: unless-stopped
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    environment:
+      - PUID=11103
+      - PGID=10513
+      - TZ=America/Toronto
+      - PMA_HOST=intranet.gontar.ca
+    volumes:
+      - /opt/docker/phpmyadmin/config.user.inc.php:/etc/phpmyadmin/config.user.inc.php
+    ports:
+      - 9002:80
+    restart: unless-stopped
+
+  jackett:
+    image: linuxserver/jackett
+    container_name: jackett
+    environment:
+      - PUID=11103
+      - PGID=10513
+      - TZ=America/Toronto
+    volumes:
+      - /opt/docker/jackett:/config
+    ports:
+      - 9005:9117
+    restart: unless-stopped
+
+  rutorrent:
+    image: linuxserver/rutorrent
+    container_name: rutorrent
+#    mem_limit: 1g
+#    mem_reservation: 750m
+    environment:
+      - PUID=11103
+      - PGID=10513
+      - TZ=America/Toronto
+    volumes:
+      - /opt/docker/rutorrent:/config
+      - /mnt/incoming:/incoming
+      - /mnt/pool:/pool
+      - /mnt/zpool:/zpool
+    ports:
+      - 9004:80
+      - 5000:5000
+      - 51413:51413
+      - 6881:6881/udp
+    depends_on:
+      - "jackett"
+    restart: unless-stopped
+
+  nzbget:
+    image: linuxserver/nzbget
+    container_name: nzbget
+    environment:
+      - PUID=11103
+      - PGID=10513
+      - TZ=America/Toronto
+    volumes:
+      - /opt/docker/nzbget:/config
+      - /mnt/pool:/pool
+      - /mnt/zpool:/zpool
+      - /opt/docker/letsencrypt/etc/letsencrypt:/le-ssl
+    ports:
+      - 6789:6789
+      - 6791:6791
+    depends_on:
+      - "jackett"
+    restart: unless-stopped
+
+  sonarr:
+    image: linuxserver/sonarr
+    container_name: sonarr
+    environment:
+      - PUID=11103
+      - PGID=10513
+      - TZ=America/Toronto
+    volumes:
+      - /opt/docker/sonarr:/config
+      - /mnt/zpool:/zpool
+      - /mnt/pool:/pool
+    ports:
+      - 9006:8989
+    depends_on:
+      - "rutorrent"
+      - "nzbget"
+    restart: unless-stopped
+
+  radarr:
+    image: linuxserver/radarr
+    container_name: radarr
+    environment:
+      - PUID=11103
+      - PGID=10513
+      - TZ=America/Toronto
+    volumes:
+      - /opt/docker/radarr:/config
+      - /mnt/zpool:/zpool
+      - /mnt/pool:/pool
+    ports:
+      - 9007:7878
+    depends_on:
+      - "rutorrent"
+      - "nzbget"
+    restart: unless-stopped
+
+  lidarr:
+    image: linuxserver/lidarr
+    container_name: lidarr
+    environment:
+      - PUID=11103
+      - PGID=10513
+      - TZ=America/Toronto
+    volumes:
+      - /opt/docker/lidarr:/config
+      - /mnt/zpool:/zpool
+      - /mnt/pool:/pool
+      - /mnt/pool/music:/music
+      - /mnt/downloads:/downloads
+    ports:
+      - 9008:8686
+    depends_on:
+      - "rutorrent"
+      - "nzbget"
+    restart: unless-stopped
+
+  bazarr:
+    image: linuxserver/bazarr
+    container_name: bazarr
+    environment:
+      - PUID=11103
+      - PGID=10513
+      - TZ=America/Toronto
+    volumes:
+      - /opt/docker/bazarr:/config
+      - /mnt/zpool:/zpool
+      - /mnt/pool:/pool
+    ports:
+      - 9009:6767
+    depends_on:
+      - "sonarr"
+      - "radarr"
+    restart: unless-stopped
+
+  nextcloud:
+    image: linuxserver/nextcloud
+    container_name: nextcloud
+    environment:
+      - PUID=11103
+      - PGID=10513
+      - TZ=America/Toronto
+    volumes:
+      - /opt/docker/nextcloud:/config
+      - /mnt/pool/nextcloud:/data
+    ports:
+      - 9010:443
+    restart: unless-stopped
+
+  guacd:
+    image: guacamole/guacd
+    container_name: guacd
+    restart: unless-stopped
+
+  guacamole:
+    image: guacamole/guacamole
+    container_name: guacamole
+    environment:
+      - GUACD_HOSTNAME=guacd
+      - MYSQL_HOSTNAME=mariadb
+      - MYSQL_DATABASE=guacamole
+      - MYSQL_USER=guacamole
+      - MYSQL_PASSWORD=4uJ89C8uKmhDASouFgxVfUWij7Mqss
+    volumes:
+      - /usr/share/fonts/Hack-Regular.ttf:/usr/share/fonts/Hack-Regular.ttf
+      - /usr/share/fonts/dejavu.ttf:/usr/share/fonts/dejavu.ttf
+      - /usr/share/fonts/notomono.ttf:/usr/share/fonts/notomono.ttf
+    ports:
+      - 9011:8080
+    depends_on:
+      - guacd
+    links:
+      - guacd:guacd
+      - mariadb:mysql
+    restart: unless-stopped
+
+  bitwarden:
+    image: bitwardenrs/server
+    container_name: bitwarden
+    environment:
+      - WEBSOCKET_ENABLED=true
+      - DOMAIN=https://bw.gontar.net/
+#      - SIGNUPS_ALLOWED=true
+    volumes:
+      - /opt/docker/bitwarden:/data
+    ports:
+      - 9012:80
+      - 3012:3012
+    restart: unless-stopped
+
+  ombi:
+    image: linuxserver/ombi
+    container_name: ombi
+    environment:
+      - PUID=11103
+      - PGID=10513
+      - TZ=America/Toronto
+    volumes:
+      - /opt/docker/ombi:/config
+    ports:
+      - 9013:3579
+    restart: unless-stopped
+
+  duplicati:
+    image: linuxserver/duplicati
+    container_name: duplicati
+    environment:
+      - PUID=11103
+      - PGID=10513
+      - TZ=America/Toronto
+    volumes:
+      - /opt/docker/duplicati:/config
+      - /mnt/pool:/backups
+      - /mnt/pool:/source
+    ports:
+      - 8200:8200
+    restart: unless-stopped
+
+  route53-gontar.net:
+    image: bshaw/route53-dyndns
+    container_name: r53-gontar.net
+    restart: always
+    environment:
+      - AWS_ACCESS_KEY_ID=AKIAJR6QW4MHB7VLJ5SQ
+      - AWS_SECRET_ACCESS_KEY=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
+      - ROUTE53_DOMAIN_A_RECORD=gontar.net
+      - ROUTE53_UPDATE_FREQUENCY=1200
+
+  route53-gontar.ca:
+    image: bshaw/route53-dyndns
+    container_name: r53-gontar.ca
+    restart: always
+    environment:
+      - AWS_ACCESS_KEY_ID=AKIAJR6QW4MHB7VLJ5SQ
+      - AWS_SECRET_ACCESS_KEY=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
+      - ROUTE53_DOMAIN_A_RECORD=gontar.ca
+      - ROUTE53_UPDATE_FREQUENCY=1200
+
+  route53-juliecharbonneau.ca:
+    image: bshaw/route53-dyndns
+    container_name: r53-juliecharbonneau.ca
+    restart: always
+    environment:
+      - AWS_ACCESS_KEY_ID=AKIAJR6QW4MHB7VLJ5SQ
+      - AWS_SECRET_ACCESS_KEY=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
+      - ROUTE53_DOMAIN_A_RECORD=juliecharbonneau.ca
+      - ROUTE53_UPDATE_FREQUENCY=1200
+
+  heimdall:
+    image: linuxserver/heimdall
+    container_name: heimdall
+    environment:
+      - PUID=11103
+      - PGID=10513
+      - TZ=America/Toronto
+    volumes:
+      - /opt/docker/heimdall:/config
+    ports:
+      - 9015:80
+      - 9016:443
+    restart: unless-stopped
